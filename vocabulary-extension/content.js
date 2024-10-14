@@ -11,7 +11,7 @@ async function highlightWords() {
     Object.keys(academic_words_dict).forEach(category => {
         academic_words_dict[category].forEach(word => {
             const regex = new RegExp(`\\b${word}\\b(?![^<]*>)`, 'gi'); // Avoid highlighting links
-            highlightedText = highlightedText.replace(regex, `<span class="highlighted" style="color: pink;">${word}</span>`);
+            highlightedText = highlightedText.replace(regex, `<span class="highlighted" style="color: pink;">${word}</span>`, 1);
         });
     });
     document.body.innerHTML = highlightedText;
