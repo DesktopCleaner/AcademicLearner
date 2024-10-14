@@ -1,20 +1,35 @@
 async function loadAcademicWords() {
-    const response = await fetch('./data/academic_words.json');
-    const academic_words_dict = await response.json();
-    return academic_words_dict;
+    return new Promise((resolve, reject) => {
+        chrome.runtime.sendMessage({ action: "getAcademicWords" }, (response) => {
+            if (response.data) {
+                console.log("Dict loaded!!!");
+                console.log(response.data["analyse"]);
+                resolve(response.data); // Resolve the promise with the data
+            } else {
+                console.error(response.error);
+                reject(new Error(response.error)); // Reject the promise on error
+            }
+        });
+    });
 }
 
 async function highlightWords() {
     const academic_words_dict = await loadAcademicWords();
+    // const z = academic_words_dict["analyse"];
+    // console.log(z);
+    // console.log(typeof z);
     const bodyText = document.body.innerHTML;
     let highlightedText = bodyText;
     Object.keys(academic_words_dict).forEach(category => {
         academic_words_dict[category].forEach(word => {
             const regex = new RegExp(`\\b${word}\\b(?![^<]*>)`, 'gi'); // Avoid highlighting links
-            highlightedText = highlightedText.replace(regex, `<span class="highlighted" style="color: pink;">${word}</span>`, 1);
+            highlightedText = highlightedText.replace(regex, `<span class="highlighted" style="background-color: pink;">${word}</span>`);
+            console.log("highlighted")
         });
     });
-    document.body.innerHTML = highlightedText;
+    document.body.innerHTML = highlightedText.replace(/<select.*?<\/select>/g, function(match) {
+        return match.replace(/<span.*?<\/span>/g, '');
+    });
 }
 
 highlightWords();
