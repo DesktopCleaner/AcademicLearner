@@ -1,9 +1,13 @@
+window.onload = function() {
+    highlightWords(); // Call your function here
+};
+
 async function loadAcademicWords() {
     return new Promise((resolve, reject) => {
         chrome.runtime.sendMessage({ action: "getAcademicWords" }, (response) => {
             if (response.data) {
                 console.log("Dict loaded!!!");
-                console.log(response.data["analyse"]);
+                console.log(response.data["access"]);
                 resolve(response.data); // Resolve the promise with the data
             } else {
                 console.error(response.error);
@@ -14,25 +18,27 @@ async function loadAcademicWords() {
 }
 
 async function highlightWords() {
-    const academic_words_dict = await loadAcademicWords();
-    // const z = academic_words_dict["analyse"];
-    // console.log(z);
-    // console.log(typeof z);
-    const bodyText = document.body.innerHTML;
-    let highlightedText = bodyText;
-    Object.keys(academic_words_dict).forEach(category => {
-        academic_words_dict[category].forEach(word => {
-            const regex = new RegExp(`\\b${word}\\b(?![^<]*>)`, 'gi'); // Avoid highlighting links
-            highlightedText = highlightedText.replace(regex, `<span class="highlighted" style="background-color: pink;">${word}</span>`);
-            console.log("highlighted")
+    const academicWords = await loadAcademicWords();
+    highlighted = document.body.innerHTML;
+    Object.keys(academicWords).forEach(category => {
+        academicWords[category].forEach(word => {
+            console.log("i");
+            const regex = new RegExp(`\\b${word}\\b(?![^<]*>)`, "i");
+            highlighted = highlighted.replace(regex, `<span class="highlighted" style="background-color: pink;">${word}</span>`);
+
         });
     });
-    document.body.innerHTML = highlightedText.replace(/<select.*?<\/select>/g, function(match) {
-        return match.replace(/<span.*?<\/span>/g, '');
-    });
+    document.body.innerHTML = highlighted;
 }
 
-highlightWords();
+
+
+//highlightWords();
+// Run highlightWords after the DOM is fully loaded
+console.log("here");
+
+
+
 
 
 // document.addEventListener('dblclick', (event) => {
