@@ -1,19 +1,21 @@
 {
     "manifest_version": 3,
-    "name": "Word Highlighter",
+    "name": "AcademicLearner",
     "version": "1.0",
     "permissions": ["activeTab", "scripting"],
     "background": {
-      "service_worker": "background.js"
+        "service_worker": "background.js"
     },
     "content_scripts": [
-      {
-        "matches": ["<all_urls>"],
-        "js": ["content.js"],
-        "run at" : "document_idle",
-        "all_frame" : true
-      }
+        {
+            "matches": ["<all_urls>"],
+            "js": ["lib/jquery-3.7.1.js", "content.js"]
+        }
     ],
-    "action": {
-    }
-  }
+    "web_accessible_resources": [
+        {
+            "resources": ["lib/jquery-3.7.1.js"],
+            "matches": ["<all_urls>"]
+        }
+    ]
+}

@@ -19,16 +19,31 @@ async function loadAcademicWords() {
 
 async function highlightWords() {
     const academicWords = await loadAcademicWords();
-    highlighted = document.body.innerHTML;
-    Object.keys(academicWords).forEach(category => {
-        academicWords[category].forEach(word => {
-            console.log("i");
-            const regex = new RegExp(`\\b${word}\\b(?![^<]*>)`, "i");
-            highlighted = highlighted.replace(regex, `<span class="highlighted" style="background-color: pink;">${word}</span>`);
+    const paragraphs = document.querySelectorAll('p'); // Targeting only paragraph elements
 
+
+
+    paragraphs.forEach(paragraph => {
+        let text = paragraph.innerHTML;
+
+        if (paragraph.tagName.toLowerCase() === 'style' || 
+            paragraph.tagName.toLowerCase() === 'script' || 
+            paragraph.classList.contains('highlighted') || 
+            paragraph.hasAttribute('data-ved')) {
+            return;
+        }
+
+        Object.keys(academicWords).forEach((key) => {
+            academicWords[key].forEach((word) => {
+                let regex = new RegExp(`\\b${word}\\b(?![^<]*>)`, "i"); // Updated regex
+                if (regex.test(text)) {
+                    text = text.replace(regex, `<span class="highlighted" style="background-color: pink;">${word}</span>`);
+                }
+            });
         });
+        paragraph.innerHTML = text; // Update only the paragraph's innerHTML
+        console.log("highlighted!")
     });
-    document.body.innerHTML = highlighted;
 }
 
 
