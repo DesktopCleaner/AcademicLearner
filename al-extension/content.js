@@ -1,4 +1,5 @@
 window.onload = function() {
+    loadAcademicWords();
     highlightWords(); // Call your function here
 };
 
@@ -21,8 +22,6 @@ async function highlightWords() {
     const academicWords = await loadAcademicWords();
     const paragraphs = document.querySelectorAll('p'); // Targeting only paragraph elements
 
-
-
     paragraphs.forEach(paragraph => {
         let text = paragraph.innerHTML;
 
@@ -43,6 +42,55 @@ async function highlightWords() {
         });
         paragraph.innerHTML = text; // Update only the paragraph's innerHTML
         console.log("highlighted!")
+    });
+
+    document.querySelectorAll('.highlighted').forEach(element => {
+        element.addEventListener('mouseenter', (event) => {
+            console.log("Im in!!");
+            const word = element.innerText;
+            const popup = document.createElement('div');
+            popup.classList.add('popup');
+            popup.style.position = 'absolute';
+            popup.style.left = `${event.pageX}px`;
+            popup.style.top = `${event.pageY - 30}px`; // Positioning the popup just above the word
+            popup.style.backgroundColor = 'white';
+            popup.style.border = '1px solid black';
+            popup.style.padding = '5px';
+            popup.style.zIndex = '1000';
+            popup.innerHTML = `
+                <button onclick="masterWord('${word}')">Master</button>
+                <button onclick="learnWord('${word}')">Learn</button>
+            `;
+            document.body.appendChild(popup);
+            element.popup = popup; // Store reference to the popup
+
+            // Add event listeners to the popup to prevent it from closing
+            popup.addEventListener('mouseenter', () => {
+                element.isPopupHovered = true;
+            });
+            popup.addEventListener('mouseleave', () => {
+                element.isPopupHovered = false;
+                if (!element.isHovered) {
+                    document.body.removeChild(popup);
+                    element.popup = null;
+                }
+            });
+        });
+
+        element.addEventListener('mouseleave', () => {
+            console.log("im out!!");
+            element.isHovered = false;
+            setTimeout(() => {
+                if (!element.isPopupHovered && element.popup) {
+                    document.body.removeChild(element.popup);
+                    element.popup = null;
+                }
+            }, 100); // Small delay to allow mouse to move to popup
+        });
+
+        element.addEventListener('mouseenter', () => {
+            element.isHovered = true;
+        });
     });
 }
 
@@ -92,9 +140,11 @@ console.log("here");
 //     console.log(`Mastered: ${word}`);
 // }
 
-// function learnWord(word) {
-//     console.log(`Learning: ${word}`);
-// }
+function learnWord(word) {
+    console.log(`Learning: ${word}`);
+    const longmanUrl = `https://www.ldoceonline.com/dictionary/${word}`;
+    window.open(longmanUrl, '_blank'); // Open the Longman dictionary in a new tab
+}
 
 // function ignoreWord(word) {
 //     console.log(`Ignored: ${word}`);
