@@ -25,7 +25,7 @@ async function loadData() {
 async function highlightWords() {
     const { academicWords, academicWordsReference } = await loadData();
     const paragraphs = document.querySelectorAll('p'); // Targeting only paragraph elements
-    let highlighted_words = new Set();
+    const highlighted_words = new Set();
 
     paragraphs.forEach(paragraph => {
         let text = paragraph.innerHTML;
@@ -38,82 +38,121 @@ async function highlightWords() {
         }
 
         for (const word of Object.keys(academicWordsReference)) {
-            if (word in highlighted_words) {
+            if (highlighted_words.has(word)) {
+                //console.log("yeah-");
                 continue;
+
             }
             let regex = new RegExp(`\\b${word}\\b(?![^<]*>)`, "i");
             if (regex.test(text)) {
-                text = text.replace(regex, `<span class="highlighted" style="background-color: pink;">${word}</span>`);
-                highlighted_words.add(word)
-                break;
+                // Replace only the first occurrence for this word
+                text = text.replace(regex, (match) => {
+                    highlighted_words.add(word); // Mark the word as highlighted
+                    return `<span class="highlighted" style="background-color: pink;">${match}</span>`;
+                });
+                //break; // Stop the loop after the first replacement
             }
         }
-
         paragraph.innerHTML = text; // Update only the paragraph's innerHTML
         console.log("highlighted!")
     });
 }
 
 async function addPopups() {
-    const highlightedElements = $('.highlighted'); // Use jQuery to select highlighted elements
-    if (highlightedElements.length === 0) {
-        console.log("No highlighted elements found.");
-        return;
-    }
-
-    highlightedElements.each(function() {
+    $(document).on('mouseenter', '.highlighted', function (event) {
         const element = $(this);
-        element.on('mouseenter', function(event) {
-            console.log("Im in!!");
-            const word = element.text();
-            const popup = $('<div class="popup"></div>').css({
-                position: 'absolute',
-                left: `${event.pageX}px`,
-                top: `${event.pageY - 30}px`,
-                backgroundColor: 'white',
-                border: '1px solid black',
-                padding: '5px',
-                zIndex: '1000'
-            }).html(`
-                <button id="masterButton">Master</button>
-                <button id="learnButton">Learn</button>
-            `);
-            $('body').append(popup);
-            element.data('popup', popup); // Store the popup in data
+        element.data("isHovered", true);
+        console.log("Mouse entered highlighted element:", element.text());
+        const word = element.text();
 
-            $('#masterButton').on('click', function() {
-                masterWord(word);
-            });
-            $('#learnButton').on('click', function() {
-                learnWord(word);
-            });
+        // Check if a popup already exists for this element
+        if (element.data('shadowHost')) {
+            console.log("Popup already exists for this element.");
+            return; // Skip creating a new popup if one exists
+        }
 
-            popup.on('mouseenter', function() {
-                element.data('isPopupHovered', true);
-            });
-            popup.on('mouseleave', function() {
-                element.data('isPopupHovered', false);
-                if (!element.data('isHovered')) {
-                    popup.remove();
-                    element.data('popup', null);
-                }
-            });
+        // Create shadow host and attach to the body
+        const shadowHost = $('<div></div>')
+            .css({
+                position: 'fixed',
+                left: '0px',
+                top: '0px',
+                zIndex: '9999',
+                pointerEvents: 'none',
+                width: '0px',
+                height: '0px',
+            })
+            .appendTo('body')[0];
+
+        // Attach shadow DOM
+        const shadowRoot = shadowHost.attachShadow({ mode: 'open' });
+
+        // Create popup as a native DOM element
+        const popup = document.createElement('div');
+        popup.classList.add('popup');
+        Object.assign(popup.style, {
+            position: 'fixed',
+            left: `${event.clientX}px`,
+            top: `${event.clientY - 30}px`,
+            backgroundColor: 'white',
+            border: '1px solid black',
+            padding: '10px',
+            borderRadius: '5px',
+            boxShadow: '0 4px 8px rgba(0, 0, 0, 0.2)',
+            pointerEvents: 'auto', // Allow interactions
+        });
+        popup.innerHTML = `
+            <p>Word: ${word}</p>
+            <button id="masterButton">Master</button>
+            <button id="learnButton">Learn</button>
+        `;
+        shadowRoot.appendChild(popup);
+
+        // Store shadowHost reference for later use
+        element.data('shadowHost', shadowHost);
+        element.data('isHovered', true);
+
+        // Add hover detection to the popup
+        popup.addEventListener('mouseenter', () => {
+            console.log("Popup hovered!");
+            element.data('isPopupHovered', true);
         });
 
-        element.on('mouseleave', function() {
-            console.log("im out!!");
-            element.data('isHovered', false);
+        popup.addEventListener('mouseleave', () => {
+            console.log("Popup left!");
+            element.data('isPopupHovered', false);
             setTimeout(() => {
-                if (!element.data('isPopupHovered') && element.data('popup')) {
-                    element.data('popup').remove();
-                    element.data('popup', null);
+                if (!element.data('isHovered')) {
+                    shadowHost.remove();
+                    element.removeData('shadowHost'); // Remove data once the popup is removed
                 }
-            }, 200);
+            }, 100);
         });
 
-        element.on('mouseenter', function() {
-            element.data('isHovered', true);
+        // Add button functionality
+        popup.querySelector('#masterButton').addEventListener('click', () => {
+            console.log("Master clicked for:", word);
+            masterWord(word);
         });
+        popup.querySelector('#learnButton').addEventListener('click', () => {
+            console.log("Learn clicked for:", word);
+            learnWord(word);
+        });
+    });
+
+    $(document).on('mouseleave', '.highlighted', function () {
+        const element = $(this);
+        console.log("Mouse left highlighted element:", element.text());
+        element.data('isHovered', false);
+
+        const shadowHost = element.data('shadowHost');
+        setTimeout(() => {
+            // Only remove the popup if it's not hovered and no longer needed
+            if (!element.data('isPopupHovered') && shadowHost) {
+                shadowHost.remove();
+                element.removeData('shadowHost');
+            }
+        }, 100);
     });
 }
 

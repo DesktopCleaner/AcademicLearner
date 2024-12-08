@@ -2,7 +2,10 @@
     "manifest_version": 3,
     "name": "AcademicLearner",
     "version": "1.0",
-    "permissions": ["activeTab", "scripting"],
+    "permissions": ["activeTab", "scripting", "storage"],
+    "content_security_policy": {
+        "extension_pages": "script-src 'self'; object-src 'self';"
+    },
     "background": {
         "service_worker": "background.js"
     },
