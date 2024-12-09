@@ -1,6 +1,8 @@
 window.onload = async function() {
 
+    showLoader();
     await highlightWords(); // Call your function here
+    hideLoader();
     addPopups();
 };
 
@@ -26,8 +28,17 @@ async function highlightWords() {
     const { academicWords, academicWordsReference } = await loadData();
     const paragraphs = document.querySelectorAll('p'); // Targeting only paragraph elements
     const highlighted_words = new Set();
+    let number_of_highlights = 0;
+    let shouldBreak = false;
 
     paragraphs.forEach(paragraph => {
+        if (shouldBreak) return;
+
+        if (number_of_highlights >= 40) {
+            shouldBreak = true; // Set the flag to true to indicate we should stop
+            return; // Exit the current iteration
+        }
+
         let text = paragraph.innerHTML;
 
         if (paragraph.tagName.toLowerCase() === 'style' || 
@@ -41,11 +52,12 @@ async function highlightWords() {
             if (highlighted_words.has(word)) {
                 //console.log("yeah-");
                 continue;
-
             }
+
             let regex = new RegExp(`\\b${word}\\b(?![^<]*>)`, "i");
             if (regex.test(text)) {
                 // Replace only the first occurrence for this word
+                number_of_highlights += 1;
                 text = text.replace(regex, (match) => {
                     highlighted_words.add(word); // Mark the word as highlighted
                     return `<span class="highlighted" style="background-color: pink;">${match}</span>`;
@@ -54,8 +66,9 @@ async function highlightWords() {
             }
         }
         paragraph.innerHTML = text; // Update only the paragraph's innerHTML
-        console.log("highlighted!")
+        console.log("highlighted paragraph!")
     });
+    console.log("number of words highlgihted: ", number_of_highlights)
 }
 
 async function addPopups() {
@@ -63,6 +76,7 @@ async function addPopups() {
         const element = $(this);
         element.data("isHovered", true);
         console.log("Mouse entered highlighted element:", element.text());
+
         const word = element.text();
 
         // Check if a popup already exists for this element
@@ -198,6 +212,62 @@ function dehighlightWord(word) {
     });
 }
 
-// function ignoreWord(word) {
-//     console.log(`Ignored: ${word}`);
-// }
+function showLoader() {
+    // Check if loader already exists
+    if (document.getElementById('extension-loader')) return;
+
+    // Create the loader element
+    const loader = document.createElement('div');
+    loader.id = 'extension-loader';
+
+    const loaderText = document.createElement('div');
+    loaderText.id = 'extension-loader-text';
+    loaderText.textContent = 'Highlighting...';     
+
+    // Add CSS to the loader
+    const style = document.createElement('style');
+    style.textContent = `
+        #extension-loader {
+            position: fixed;
+            top: 10px;
+            left: 30px;
+            width: 30px;
+            height: 30px;
+            border: 6px solid rgba(0, 0, 0, 0.2);
+            border-top: 4px solid #000;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            z-index: 10000;
+        }
+        #extension-loader-text {
+            position: fixed;
+            top: 45px; /* Adjusted to position below the loader */
+            left: 10px;1
+            font-size: 16px;
+            color: #FF69B4; /* Highlighted in pink */
+            z-index: 10000;
+            font-weight: bold; /* Made text bold */
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+    `;
+
+    // Append the style and loader to the document
+    document.head.appendChild(style);
+    document.body.appendChild(loader);
+    document.body.appendChild(loaderText);
+}
+
+function hideLoader() {
+    const loader = document.getElementById('extension-loader');
+    const loaderText = document.getElementById('extension-loader-text');
+    if (loader) {
+        loader.remove();
+    }
+
+    if (loaderText) {
+        loaderText.remove();
+    }
+}
