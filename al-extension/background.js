@@ -14,4 +14,11 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
         .catch(error => sendResponse({ error: error.message }));
         return true; // Keep the message channel open for sendResponse
     }
+
+});
+
+// Existing storage retrieval code
+chrome.storage.sync.get(['masteredWords'], (result) => {
+    const masteredWords = result.masteredWords || [];
+    // You can now use learnedWords and masteredWords as needed
 });

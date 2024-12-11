@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mastered Words</title>
+    <style>
+        body {
+            width: 250px; /* Increased width for better spacing */
+            font-family: Arial, sans-serif;
+            margin: 0; /* Remove default margin */
+            padding: 10px; /* Add padding around the content */
+        }
+        #mastered-words-dropdown {
+            max-height: 300px; /* Set a maximum height for the dropdown */
+            overflow-y: auto; /* Enable vertical scrolling */
+            border: 1px solid #ccc; /* Optional: Add a border for better visibility */
+            border-radius: 5px; /* Optional: Rounded corners */
+            padding: 5px; /* Padding inside the dropdown */
+        }
+        ul {
+            list-style-type: none; /* Remove bullet points */
+            padding: 0; /* Remove padding */
+            margin: 0; /* Remove margin */
+        }
+        li {
+            display: flex; /* Use flexbox for alignment */
+            justify-content: space-between; /* Space between word and button */
+            align-items: center; /* Center items vertically */
+            padding: 5px 0; /* Add vertical padding for each item */
+        }
+        button {
+            margin-left: 10px; /* Space between word and button */
+            padding: 5px; /* Add padding to buttons */
+            cursor: pointer; /* Change cursor to pointer on hover */
+        }
+        /* Custom scrollbar styles */
+        #mastered-words-dropdown::-webkit-scrollbar {
+            width: 8px; /* Width of the scrollbar */
+        }
+        #mastered-words-dropdown::-webkit-scrollbar-thumb {
+            background-color: #888; /* Color of the scrollbar thumb */
+            border-radius: 10px; /* Rounded corners for the scrollbar thumb */
+        }
+        #mastered-words-dropdown::-webkit-scrollbar-thumb:hover {
+            background-color: #555; /* Darker color on hover */
+        }
+        #mastered-words-dropdown::-webkit-scrollbar-track {
+            background: #f1f1f1; /* Background of the scrollbar track */
+            border-radius: 10px; /* Rounded corners for the scrollbar track */
+        }
+        .header-container {
+            display: flex; /* Use flexbox for alignment */
+            justify-content: space-between; /* Space between title and input */
+            align-items: center; /* Center items vertically */
+            margin-bottom: 10px; /* Space below the header */
+        }
+
+    </style>
+</head>
+<body>
+    <div id="mastered-words-dropdown">
+        <div class="header-container">
+            <h3>Mastered Words</h3>
+            <input type="text" id="search-input" placeholder="Search by first letter">
+        </div>
+        <ul id="mastered-words-list"></ul>
+    </div>
+    <script src="popup.js"></script>
+</body>
+</html>
