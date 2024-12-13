@@ -1,4 +1,3 @@
-// background.js
 chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
     if (request.action === "getData") {
         Promise.all([
@@ -17,8 +16,6 @@ chrome.runtime.onMessage.addListener((request, sender, sendResponse) => {
 
 });
 
-// Existing storage retrieval code
 chrome.storage.sync.get(['masteredWords'], (result) => {
     const masteredWords = result.masteredWords || [];
-    // You can now use learnedWords and masteredWords as needed
 });

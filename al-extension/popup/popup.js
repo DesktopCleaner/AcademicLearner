@@ -1,19 +1,17 @@
 function showMasteredWords() {
-    console.log("dropdown!");
+    //console.log("dropdown!");
 
-    // Reference the existing header and search input from the DOM
-    const header = document.querySelector('.header-container h3'); // Assuming the header is in a container
-    const searchInput = document.getElementById('search-input'); // Reference the existing search input
+    const header = document.querySelector('.header-container h3'); 
+    const searchInput = document.getElementById('search-input'); 
 
-    // Clear the existing list
     const list = document.getElementById('mastered-words-list');
     list.innerHTML = ''; // Clear existing list
 
     searchInput.addEventListener('keydown', (event) => {
-        console.log("Key pressed: ", event.key); // Debugging log for any key press
+        console.log("Key pressed: ", event.key);
         if (event.key === 'Enter') {
             event.preventDefault(); // Prevent default action
-            console.log("Enter key pressed!"); // Debugging log
+            //console.log("Enter key pressed!");
             
             const inputText = searchInput.value; // Get the input text
             console.log("Input text: ", inputText); // Log the input text for debugging
@@ -21,12 +19,11 @@ function showMasteredWords() {
         }
     });
 
-    console.log("Search input added to DOM."); // Confirm input is added
+    //console.log("Search input added to DOM.");
 
-    // Display all mastered words initially
     chrome.storage.sync.get(['masteredWords'], (result) => {
         const masteredWords = result.masteredWords || [];
-        displayWords(''); // Show all words initially
+        displayWords('');
     });
 }
 
@@ -44,7 +41,7 @@ function displayWords(filter) {
 
             // Create a toggle button
             const toggleButton = document.createElement('button');
-            toggleButton.textContent = 'Toggle Mastery';
+            toggleButton.textContent = 'Unmaster';
             toggleButton.onclick = () => toggleMasteredWord(word);
 
             listItem.appendChild(toggleButton);
@@ -59,20 +56,16 @@ function toggleMasteredWord(word) {
         let masteredWords = result.masteredWords || [];
         if (masteredWords.includes(word)) {
             // Remove the word from mastered
-            masteredWords = masteredWords.filter(w => w !== word);
-        } else {
-            // Add the word to mastered
-            masteredWords.push(word);
+            masteredWords = masteredWords.filter(w => w !== word); //Filter the word out and drop it
         }
 
-        // Update storage
         chrome.storage.sync.set({ masteredWords }, () => {
-            console.log(`Toggled mastery for: ${word}`);
+            //console.log(`Toggled mastery for: ${word}`);
             showMasteredWords(); // Refresh the list
         });
     });
     console.log("demastered!");
 }
 
-// Call this function to display mastered words when the popup is opened
+//Inital display
 showMasteredWords();
