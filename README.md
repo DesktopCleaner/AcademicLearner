@@ -25,7 +25,10 @@ https://github.com/user-attachments/assets/07bd8cbc-7d67-4771-bd29-313ebe0b73d6
   - Storage shared accross devices
  
 ## Database
-#### 
+#### The academic word list used for highlighting was analyzed from all open-access Nature research articles from 2022 to 2024.
+#### Words are analyzed by frequency, with stepwords and specific field-related words removed.
+#### The "list" consists of the top 570 words from the analysis.
+#### More details about the database: [NatureMagazineScraper](https://github.com/DesktopCleaner/NatureMagazineScraper) 
  
 ## How to Use
 #### Simply download `al-extension` folder and upload it to "my extension" on Chrome extensions page.
@@ -46,19 +49,9 @@ https://github.com/user-attachments/assets/07bd8cbc-7d67-4771-bd29-313ebe0b73d6
   - More attractive UI
 - Refine Database
   - Ensure a variety of academic articles are used, not just from Nature
+  - Expand academic word list for highlighting
 
 ### About Me
 #### Hi👋! I'm a high school student in Canada. This is my first independent Github project!
 #### I've put lots of efforts into learning how to code a Chrome extension and creating this project😿
 #### English is my 2nd language. It has been troubling for me to learn English vocabulary, which actually inspired me to develop this project!📚
-
-
-
-
-##
-
-
-
-
-
-
