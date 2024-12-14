@@ -125,7 +125,7 @@ async function addPopups() {
             pointerEvents: 'auto', // Allow interactions
         });
         popup.innerHTML = `
-            <p style="font-weight: bold; color: lightgreen;">Word: <span style="background-color: white; color: black;">${low_word}</span></p>
+            <p style="font-weight: bold; color: green;">Word: <span style="background-color: rgba(255, 255, 255, 0.5); color: black;">${low_word}</span></p>
             <button id="masterButton">Master</button>
             <button id="learnButton">Learn</button>
         `;
