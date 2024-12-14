@@ -26,7 +26,7 @@ https://github.com/user-attachments/assets/07bd8cbc-7d67-4771-bd29-313ebe0b73d6
  
 ## Database
 #### The academic word list used for highlighting was analyzed from all open-access Nature research articles from 2022 to 2024.
-#### Words are analyzed by frequency, with stepwords and specific field-related words removed.
+#### Words are analyzed by frequency, with stepwords, common words and specific field-related words removed.
 #### The "list" consists of the top 570 words from the analysis.
 #### More details about the database: [NatureMagazineScraper](https://github.com/DesktopCleaner/NatureMagazineScraper) 
  
