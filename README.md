@@ -24,18 +24,38 @@ https://github.com/user-attachments/assets/07bd8cbc-7d67-4771-bd29-313ebe0b73d6
 - Sync Storage
   - Storage shared accross devices
  
+## Database
+#### 
+ 
 ## How to Use
 #### Simply download `al-extension` folder and upload it to "my extension" on Chrome extensions page.
 
 ## Emailware
 #### Feel free to send me an email to share your feedbacks or suggestions.
 
-
-
 ## Credits
 #### This extension uses the following open source libraries.
 - [jQuery](https://github.com/jquery/jquery)
 
+## What's Next
+- Customizations
+  - Customize highlight color, maximum highlighted words per page etc.
+- Gamified Features to Encourage Learning
+  - Point system
+  - Achivements
+  - More attractive UI
+- Refine Database
+  - Ensure a variety of academic articles are used, not just from Nature
+
+### About Me
+#### Hi👋! I'm a high school student in Canada. This is my first independent Github project!
+#### I've put lots of efforts into learning how to code a Chrome extension and creating this project😿
+#### English is my 2nd language. It has been troubling for me to learn English vocabulary, which actually inspired me to develop this project!📚
+
+
+
+
+##
 
 
 
